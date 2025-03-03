@@ -1,9 +1,13 @@
+import os
+os.environ["HF_HUB_ENABLE_HF_TRANSFER"]='1'
+from huggingface_hub import snapshot_download
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
 class InferlessPythonModel:
     def initialize(self):
         model_id = "meta-llama/Llama-2-7b-chat-hf"
+        snapshot_download(repo_id=model_id,allow_patterns=["*.safetensors"])
         self.tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
         self.model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float16, device_map="cuda")
 
